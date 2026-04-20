@@ -1,6 +1,5 @@
 import { useState } from "react";
 import type { Card } from "../types";
-import CardTile from "./CardTile";
 
 
 
@@ -10,7 +9,6 @@ interface SearchBarProps {
 
 function SearchBar({ onCardFound }: SearchBarProps) {
 
-  const [card, setCard] = useState<Card | null>(null);
   const [searchText, setSearchText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -26,9 +24,9 @@ function SearchBar({ onCardFound }: SearchBarProps) {
       return;
     }
 
-    const data = await response.json();
-    setCard(data);
-    console.log(data);
+    const data: Card = await response.json();
+    onCardFound(data);
+    setSearchText("");
   }
 
   return (
@@ -39,12 +37,6 @@ function SearchBar({ onCardFound }: SearchBarProps) {
         placeholder="Type a card name..."
       />
       <button onClick={handleSearch}>Search</button>
-      {card && <CardTile card={card} />}
-      {card && <button onClick={() => {
-        onCardFound(card);
-        setCard(null);
-        setSearchText("");
-        }}>Add to Collection</button>}
 
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
     </div>
@@ -52,6 +44,3 @@ function SearchBar({ onCardFound }: SearchBarProps) {
 }
 
 export default SearchBar;
-
-
-

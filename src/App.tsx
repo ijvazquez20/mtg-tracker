@@ -8,6 +8,10 @@ function App() {
   const [card, setCard] = useState<Card | null>(null);
   const [collection, setCollection] = useState<Card[]>([]);
 
+  function handleCardFound(foundCard: Card | null) {
+    setCard(foundCard);
+  }
+
   function handleAddToCollection() {
     if (card === null) {
       return;
@@ -26,7 +30,7 @@ function App() {
     <div style={{ padding: "32px" }}>
       <h1>MTG Collection Tracker</h1>
 
-      <SearchBar onCardFound={setCard} />
+      <SearchBar onCardFound={handleCardFound} />
 
       {card && <CardTile card={card} />}
       {card && <button onClick={handleAddToCollection}>Add to Collection</button>}
@@ -37,8 +41,8 @@ function App() {
         gridTemplateColumns: "repeat(3, 1fr)",
         gap: "16px"
       }}>
-        {collection.map((c, index) => (
-          <CardTile key={index} card={c} onRemove={handleRemove}/>
+        {collection.map((c) => (
+          <CardTile key={c.id} card={c} onRemove={handleRemove}/>
         ))}
       </div>
     </div>
