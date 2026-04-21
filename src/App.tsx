@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import CardTile from "./components/CardTile";
 import SearchBar from "./components/SearchBar";
 import type { Card } from "./types";
@@ -7,6 +7,18 @@ import type { Card } from "./types";
 function App() {
   const [card, setCard] = useState<Card | null>(null);
   const [collection, setCollection] = useState<Card[]>([]);
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("mtg-collection");
+    if (saved) {
+        setCollection(JSON.parse(saved));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("mtg-collection", JSON.stringify(collection));
+  }, [collection])
 
   function handleCardFound(foundCard: Card | null) {
     setCard(foundCard);
