@@ -10,3 +10,7 @@ export interface Card {
         normal: string;
     };
 }
+
+export interface CollectionCard extends Card {
+    quantity: number;
+}

@@ -1,14 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import CardTile from "./components/CardTile";
 import SearchBar from "./components/SearchBar";
-import type { Card } from "./types";
+import type { Card, CollectionCard } from "./types";
 
 
 function App() {
   const [card, setCard] = useState<Card | null>(null);
-  const [collection, setCollection] = useState<Card[]>([]);
+  const [collection, setCollection] = useState<CollectionCard[]>([]);
   const isFirstRender = useRef(true);
 
+  // Loads the collection
   useEffect(() => {
     const saved = localStorage.getItem("mtg-collection");
     if (saved) {
@@ -16,7 +17,13 @@ function App() {
     }
   }, []);
 
+  // Saves the collection
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     localStorage.setItem("mtg-collection", JSON.stringify(collection));
   }, [collection])
 
@@ -28,9 +35,23 @@ function App() {
     if (card === null) {
       return;
     }
-    setCollection([...collection, card]);
+
+    const existingCard = collection.find((c) => c.id === card.id);
+    if (existingCard) {
+      setCollection(collection.map((c) => {
+        if (c.id === card.id) {
+          const newCard = {...c, quantity: c.quantity + 1};
+          return newCard;
+        } else {
+        return c;
+        }
+      }))
+    } else {
+        const newCard = {...card, quantity: 1};
+        setCollection([...collection, newCard]);
+    }
+
     setCard(null);
-    //setSearchText("");
   }
 
   function handleRemove(id: string) {

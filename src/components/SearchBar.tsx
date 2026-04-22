@@ -35,6 +35,7 @@ function SearchBar({ onCardFound }: SearchBarProps) {
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
         placeholder="Type a card name..."
+        onKeyDown={(e) => e.key === "Enter" && handleSearch()}
       />
       <button onClick={handleSearch}>Search</button>
 

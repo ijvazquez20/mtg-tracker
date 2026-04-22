@@ -5,6 +5,7 @@ import type { Card } from "../types";
 interface CardTileProps {
   card: Card;
   onRemove?: (id: string) => void;
+  quantity?: number;
 }
 
 function CardTile({ card, onRemove }: CardTileProps) {
