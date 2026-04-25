@@ -8,7 +8,7 @@ interface CardTileProps {
   quantity?: number;
 }
 
-function CardTile({ card, onRemove }: CardTileProps) {
+function CardTile({ card, onRemove, quantity }: CardTileProps) {
   return (
     <div style={{ border: "1px solid #ccc", padding: "16px", width: "300px", borderRadius: "8px" }}>
       {card.image_uris && <img src={card.image_uris.normal} alt={card.name} style={{ width: "100%", borderRadius: "14px" }} />}
@@ -18,6 +18,7 @@ function CardTile({ card, onRemove }: CardTileProps) {
       {card.oracle_text && <p><strong>Text:</strong> {card.oracle_text}</p>}
       <p><strong>Rarity:</strong> {card.rarity}</p>
       <p><strong>Set:</strong> {card.set_name}</p>
+      {quantity && <p><strong>Quantity:</strong> {quantity}</p>}
       {onRemove && <button onClick={() => onRemove(card.id)}>Remove</button>}
     </div>
   );

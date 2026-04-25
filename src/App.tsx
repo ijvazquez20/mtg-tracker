@@ -75,7 +75,7 @@ function App() {
         gap: "16px"
       }}>
         {collection.map((c) => (
-          <CardTile key={c.id} card={c} onRemove={handleRemove}/>
+          <CardTile key={c.id} card={c} onRemove={handleRemove} quantity={c.quantity}/>
         ))}
       </div>
     </div>

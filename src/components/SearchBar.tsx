@@ -4,7 +4,7 @@ import type { Card } from "../types";
 
 
 interface SearchBarProps {
-  onCardFound: (card: Card) => void;
+  onCardFound: (card: Card | Card[]) => void;
 }
 
 function SearchBar({ onCardFound }: SearchBarProps) {
@@ -16,16 +16,30 @@ function SearchBar({ onCardFound }: SearchBarProps) {
     setErrorMessage("");
 
     const response = await fetch(
-      `https://api.scryfall.com/cards/named?exact=${searchText}`
+      `https://api.scryfall.com/cards/named?fuzzy=${searchText}`
     );
 
     if (!response.ok) {
-      setErrorMessage("Card not found. Please try another name.");
+      const searchResponse = await fetch(
+        `https://api.scryfall.com/cards/search?q=${searchText}`
+      );
+
+      if (!searchResponse.ok){
+        setErrorMessage("Card not found. Please try another name.");
+        return;
+      }
+
+      const searchData = await searchResponse.json();
+      onCardFound(searchData.data)
       return;
     }
 
-    const data: Card = await response.json();
-    onCardFound(data);
+    const data = await response.json();
+    if (data.object === "card") {
+      onCardFound(data);
+    } else {
+      console.log(data)
+    }
     setSearchText("");
   }
 
