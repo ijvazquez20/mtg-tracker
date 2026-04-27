@@ -6,6 +6,9 @@ import type { Card, CollectionCard } from "./types";
 
 function App() {
   const [card, setCard] = useState<Card | null>(null);
+  const [searchResults, setSearchResults] = useState<Card[]>([]);
+
+  // Collection stat
   const [collection, setCollection] = useState<CollectionCard[]>([]);
   const isFirstRender = useRef(true);
 
@@ -27,8 +30,14 @@ function App() {
     localStorage.setItem("mtg-collection", JSON.stringify(collection));
   }, [collection])
 
-  function handleCardFound(foundCard: Card | null) {
+  function handleCardFound(foundCard: Card | Card[]| null) {
+    if (Array.isArray(foundCard)) {
+      setCard(null);
+      setSearchResults(foundCard);
+      return;
+    }
     setCard(foundCard);
+    setSearchResults([]);
   }
 
   function handleAddToCollection() {
@@ -66,6 +75,16 @@ function App() {
       <SearchBar onCardFound={handleCardFound} />
 
       {card && <CardTile card={card} />}
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(3, 1fr)",
+        gap: "16px"
+      }}>
+      {searchResults.map((c) => (
+        <CardTile key={c.id} card={c} />
+      ))}
+      </div>
+
       {card && <button onClick={handleAddToCollection}>Add to Collection</button>}
 
       <h2>My Collection</h2>
